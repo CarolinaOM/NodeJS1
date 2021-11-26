@@ -36,7 +36,7 @@ console.log(edad6);*/
 
 
 //Funciones Callback
-function Mensaje (callback){
+/*function Mensaje (callback){
     console.log('Mensaje antes de la llamada callback. ');
     callback();
 }
@@ -56,5 +56,24 @@ Sumar(5, 8,  Resultado);
 //otra
 setTimeout(function (){
 console.log('Esto se va a ejecutar despues de 3 segundos');
-}, 3000);
+}, 3000);*/
+
+const mensaje = new Promise ((resolve, reject) => {
+    setTimeout(() => {
+        if(false)
+            resolve('Esto se va a ejecutar despues de 3 segundos')
+        else
+            reject('Hubo un error');
+        }, 3000);
+});
+
+mensaje
+    .then(msj => {
+        console.log(msj);
+    })
+    .catch(error => {
+        console.log(error);
+    })
+
+
 
