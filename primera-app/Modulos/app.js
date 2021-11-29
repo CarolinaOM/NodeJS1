@@ -37,7 +37,7 @@ fs.readdir('./',function(err, files){
 
 //Moddulos de Eventos
 
-const EventEmitter = require('events');
+/*const EventEmitter = require('events');
 const emitter = new EventEmitter();
 const mensajeLoger = 'MensajeLoger';
 
@@ -47,4 +47,28 @@ emitter.on(mensajeLoger, function(arg){
 })
 
 //Registrar el evento 
-emitter.emit(mensajeLoger, {id:1, url:'http://google.com'});
+emitter.emit(mensajeLoger, {id:1, url:'http://google.com'});*/
+
+
+
+//Modulo HTTP
+
+const http = require('http');
+const server = http.createServer((req, res)=>{
+    if(req.url === '/'){
+        res.write('Hola mundo');
+        res.end();
+    }
+    if(req.url === '/api/productos'){
+        res.write(JSON.stringify(['mouse', 'teclado', 'parlante']));
+        res.end();
+    };
+});
+
+//server.on('connection',(puerto,)=>{
+//   console.log('Nueva conexion...');
+//})
+
+server.listen(3000);
+console.log('Servidor escuchado en el puerto 3000...');
+
