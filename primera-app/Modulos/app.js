@@ -22,7 +22,7 @@ console.log(`emoria Total: ${memoriaTotal}`);*/
 
 
 
-const fs = require('fs');
+/*const fs = require('fs');
 
 //const archivos = fs. readdirSync('./');
 //console.log(archivos);
@@ -30,4 +30,21 @@ const fs = require('fs');
 fs.readdir('./',function(err, files){
     if(err) console.log('Error',err);
     else console.log('Resultado', files);
+})*/
+
+
+
+
+//Moddulos de Eventos
+
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
+const mensajeLoger = 'MensajeLoger';
+
+//Registrar el Listener
+emitter.on(mensajeLoger, function(arg){
+    console.log('Listener llamado...', arg);
 })
+
+//Registrar el evento 
+emitter.emit(mensajeLoger, {id:1, url:'http://google.com'});
