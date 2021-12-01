@@ -1,11 +1,7 @@
-const serie = require('/serie');
-
-
 const serie = require('./serie');
 
 let argv = process.argv;
 let valor = argv[2].split('=')[1];
-
 let cantidad = valor;
 
 serie.crearSerie(cantidad)
