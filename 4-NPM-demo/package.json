@@ -12,4 +12,5 @@
     "colors": "^1.4.0",
     "mongoose": "^6.0.14"
   }
+  //X.Y.Z=mayor version, Y=menos version, Z=version parches
 }
