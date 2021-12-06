@@ -6,9 +6,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/usuarios', (req, res) => {
-    res.send(['caro', 'maria', 'ana']);
+    res.send(['caro', 'maria', 'ana'])
 });
 
-app.listen(3000, () => {
-    console.log('Escuchando en el puerto 3000..');
+const port = process.env.PORT ||3000;
+app.listen(port, () => {
+    console.log(`Escuchando en el puerto ${port}...`);
 })
