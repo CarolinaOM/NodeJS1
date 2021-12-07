@@ -2,7 +2,7 @@ const { json } = require('express');
 const express = require ('express');
 const app = express();
 
-app.use(express,json);
+app.use(express.json());
 
 const usuarios = [
     {id:1, nombre:'Caro'},
@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/usuarios', (req, res) => {
-    res.send(['caro', 'maria', 'ana'])
+    res.send(usuarios);
 });
 
 app.get('/api/usuarios/:id', (req, res)=>{
@@ -25,14 +25,20 @@ app.get('/api/usuarios/:id', (req, res)=>{
 });
 
 app.post('/api/usuarios',(req, res)=> {
+    if(!req.body.nombre || req.body.nombre.length <= 2){
+        //400 Bad Request
+        res.status(400).send('Debe ingresar un nombre, que tenga minimo 3 letras.');
+        return;
+    }
     const usuario = {
         id: usuarios.length + 1,
         nombre: req.body.nombre
     };
     usuarios.push(usuarios);
+    res.send(usuario);
 });
 
-const port = process.env.PORT ||3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Escuchando en el puerto ${port}...`);
 })
