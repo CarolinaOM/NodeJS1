@@ -1,5 +1,6 @@
 const { json } = require('express');
 const express = require ('express');
+const Joi = require('@hapi/joi');
 const app = express();
 
 app.use(express.json());
@@ -25,17 +26,45 @@ app.get('/api/usuarios/:id', (req, res)=>{
 });
 
 app.post('/api/usuarios',(req, res)=> {
-    if(!req.body.nombre || req.body.nombre.length <= 2){
-        //400 Bad Request
-        res.status(400).send('Debe ingresar un nombre, que tenga minimo 3 letras.');
+    
+    const schema = Joi.object({
+        nombre: Joi.string().min(3).required()
+    });
+    const {error, value} = schema.validate({nombre: req.body.nombre });
+    if(!error){
+        const usuario = {
+            id: usuarios.length + 1,
+            nombre: value.nombre
+        };
+        usuarios.push(usuario);
+        res.send(usuario);
+    }else{
+        const mensaje = error.details[0].message;
+        res.status(400).send(mensaje);
+    }
+    
+
+});
+
+app.put('/api/usuarios/:id', (req, res) => {
+    //Encontrar si existe el objeto usuario
+    let usuario = usuarios.find(u => u.id === parseInt(req.params.id));
+    if(!usuario) res.status(400).send('El usuario no fue encontrado');
+
+    const schema = Joi.object({
+        nombre: Joi.string().min(3).required()
+    });
+    
+    const {error, value} = schema.validate({nombre: req.body.nombre })
+    if(error){
+        const mensaje = error.details[0].message;
+        res.status(400).send(mensaje);
         return;
     }
-    const usuario = {
-        id: usuarios.length + 1,
-        nombre: req.body.nombre
-    };
-    usuarios.push(usuarios);
+
+    usuario.nombre = value.nombre;
     res.send(usuario);
+
 });
 
 const port = process.env.PORT || 3000;
