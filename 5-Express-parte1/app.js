@@ -67,6 +67,19 @@ app.put('/api/usuarios/:id', (req, res) => {
 
 });
 
+app.delete('/api/usuarios/:id',(req, res) => {
+    let usuario = existeUsuario(req.params.id)
+    if(!usuario){
+        res.status(400).send('El usuario no fue encontrado');
+        return;
+    }
+
+    const index = usuarios.indexOf(usuario);
+    usuarios.splice(index, 1);
+
+    res.send(usuario);
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Escuchando en el puerto ${port}...`);
