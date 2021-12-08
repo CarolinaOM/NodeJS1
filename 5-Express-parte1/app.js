@@ -1,9 +1,17 @@
 const { json } = require('express');
 const express = require ('express');
+const logger = require('./logger');
 const Joi = require('@hapi/joi');
 const app = express();
 
-app.use(express.json());
+app.use(express.json());//body
+
+app.use(logger);
+
+app.use(function(req, res, next){
+    console.log('Autenticando...');
+    next();
+})
 
 const usuarios = [
     {id:1, nombre:'Caro'},
