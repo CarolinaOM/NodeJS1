@@ -4,7 +4,9 @@ const logger = require('./logger');
 const Joi = require('@hapi/joi');
 const app = express();
 
-app.use(express.json());//body
+app.use(express.json());//body 
+app.use(express.urlencoded({extended:true}));
+app.use(express.static('public'));
 
 app.use(logger);
 
@@ -34,7 +36,7 @@ app.get('/api/usuarios/:id', (req, res)=>{
 });
 
 app.post('/api/usuarios',(req, res)=> {
-    
+
     const schema = Joi.object({
         nombre: Joi.string().min(3).required()
     });
