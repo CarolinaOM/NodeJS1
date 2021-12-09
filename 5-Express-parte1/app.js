@@ -1,6 +1,10 @@
+const debug = require('debug')('app:inicio');
+//const dbDebug = require('debug')('app:db');
 const { json } = require('express');
 const express = require ('express');
-const logger = require('./logger');
+const config = require ('config');
+//const logger = require('./logger');
+const morgan = require('morgan');
 const Joi = require('@hapi/joi');
 const app = express();
 
@@ -8,12 +12,26 @@ app.use(express.json());//body
 app.use(express.urlencoded({extended:true}));
 app.use(express.static('public'));
 
-app.use(logger);
+//Configuracion de entornos
+console.log('Aplicacion: ' + config.get('nombre'));
+console.log('BD server: ' + config.get('configDB.host'));
 
-app.use(function(req, res, next){
-    console.log('Autenticando...');
-    next();
-})
+//Uso de midelware de tercero - Morgan
+if(app.get('env') === 'development'){
+    app.use(morgan('tiny'));
+    //console.log('Morgan habilitado...');
+    debug('Morgan esta habilitado.');
+}
+
+//TRabajos con la base de datos
+debug('Concetando con la bd...');
+
+
+// app.use(logger);
+// app.use(function(req, res, next){
+//     console.log('Autenticando...');
+//     next();
+// })
 
 const usuarios = [
     {id:1, nombre:'Caro'},
