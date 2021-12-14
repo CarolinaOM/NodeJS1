@@ -38,6 +38,9 @@ async function listarCuros(){
     // min (not in)
     // or
     // and
+    const numeroPage = 2;
+    const sizePage =10;
+    // api/cursos?numeroPage=4&sizePage=10
     const cursos = await Curso
         //.find({publicado : true})
         //.find({ precio : {$gte:10, $lte:30}})
@@ -50,10 +53,36 @@ async function listarCuros(){
         //.find({autor: /aro$/ })
         // Cuando un campo tiene un contenido especial
         .find({autor: /.*ro.*/ })
-        .limit(10)
+        .skip((numeroPage - 1) * sizePage)
+        .limit(sizePage)
         .sort({autor : -1})
         .select({autor:1, nombre:1, etiquetas:1});
     console.log(cursos);
 }
-listarCuros();
+//listarCuros();
+
+async function actulizarCurso(id){
+    // const curso = await Curso.findById(id);
+    // if(!curso){
+    //     console.log('El curso no existe');
+    //     return;
+    // }
+    // curso.publicado = false;
+    // curso.autor = 'Caro Caro';
+
+    // curso.set({
+    //     publicado: false,
+    //     autor: 'Caro Caro'
+    // })
+    // const resultado = await curso.save();
+    // console.log(resultado);
+    const resultado = await Curso.update({ _id: id}, {
+        $set: {
+            autor:'Caro',
+            publicado: true
+        }
+    });
+    console.log(resultado);
+}
+actulizarCurso('61b788d94406704ff98356a5');
 
