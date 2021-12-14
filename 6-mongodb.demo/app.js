@@ -76,13 +76,13 @@ async function actulizarCurso(id){
     // })
     // const resultado = await curso.save();
     // console.log(resultado);
-    const resultado = await Curso.update({ _id: id}, {
+    const resultado = await Curso.findByIdAndUpdate(id, {
         $set: {
-            autor:'Caro',
-            publicado: true
+            autor:'Isa',
+            publicado: true 
         }
-    });
+    }, {new: true});
     console.log(resultado);
 }
-actulizarCurso('61b788d94406704ff98356a5');
+actulizarCurso('61b7896b999a1382a6721e59');
 
