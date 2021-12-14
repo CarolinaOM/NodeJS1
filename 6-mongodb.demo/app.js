@@ -28,11 +28,31 @@ async function crearCurso(){
 //crearCurso();
 
 async function listarCuros(){
+    // eq (equal, igual)
+    // ne (not equal, no igual)
+    // gt (greater than, mayor que)
+    // gte (greater than or equal to, mayor o igual que)
+    // lt (less than, menor que)
+    // lte (less than or equal to, menor o iagual que)
+    // in
+    // min (not in)
+    // or
+    // and
     const cursos = await Curso
-        .find({publicado : true})
+        //.find({publicado : true})
+        //.find({ precio : {$gte:10, $lte:30}})
+        //.find({precio: {$in: [10, 15, 25]}})
+        //.find()
+        //.and([{autor:'Caro'}, {publicado: false}])
+        // Empiece con la palabra Car
+        //.find({ autor: /^Car/ })
+        // Cuando termina en una palabra o expresion
+        //.find({autor: /aro$/ })
+        // Cuando un campo tiene un contenido especial
+        .find({autor: /.*ro.*/ })
         .limit(10)
         .sort({autor : -1})
-        .select({nombre:1, etiquetas:1});
+        .select({autor:1, nombre:1, etiquetas:1});
     console.log(cursos);
 }
 listarCuros();
