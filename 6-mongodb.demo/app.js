@@ -84,5 +84,11 @@ async function actulizarCurso(id){
     }, {new: true});
     console.log(resultado);
 }
-actulizarCurso('61b7896b999a1382a6721e59');
+//actulizarCurso('61b7896b999a1382a6721e59');
+async function eliminarDocumento(id){
+    const result = await Curso.deleteOne({ _id:id});
+    //const resultado = await Curso.findByIdAndDelete(id);
+    console.log(result);
+}
+eliminarDocumento('61b7896b999a1382a6721e59');
 
