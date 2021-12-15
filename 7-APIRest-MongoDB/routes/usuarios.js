@@ -22,6 +22,20 @@ ruta.post('/', (req, res) => {
 });
 
 
+ruta.put('/:email', (req, res) => {
+    let resultado = actualizarUsuario(req.params.email, req.body);
+    resultado.then(valor => {
+        res.json({
+            valor: valor
+        })
+    }).catch(err => {
+        res.status(400).json({
+            error: err
+        })
+    });
+});
+
+
 async function crearUsuario(body){
     let usuario = new Usuario ({
         email     : body.email,
@@ -29,5 +43,15 @@ async function crearUsuario(body){
         password  : body.password 
     });
     return await usuario.save();
+}
+
+async function actualizarUsuario(email, body){
+    let usuario = await Usuario.findOneAndUpdate(email, {
+        $set: {
+            nombre   : body.nombre,
+            password : body.password
+        }
+    }, {new: true})
+    return usuario;
 }
 module.exports = ruta;
