@@ -35,6 +35,18 @@ ruta.put('/:email', (req, res) => {
     });
 });
 
+ruta.delete('/:email', (req, res) => {
+    let resultado = desactivarUsuario(req.params.email);
+    resultado.then(valor => {
+        res.json({
+            usuario: valor
+        })
+    }).catch(err =>{
+        res.status(400).json({
+            error: err
+        })
+    });
+});
 
 async function crearUsuario(body){
     let usuario = new Usuario ({
@@ -54,4 +66,15 @@ async function actualizarUsuario(email, body){
     }, {new: true})
     return usuario;
 }
+
+
+async function desactivarUsuario(email){
+    let usuario = await Usuario.findOneAndUpdate(email, {
+        $set: {
+            estado: false
+        }
+    }, {new: true});
+    return usuario;
+}
+
 module.exports = ruta;
