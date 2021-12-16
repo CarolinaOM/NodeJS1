@@ -1,6 +1,20 @@
 const express = require('express');
 const Usuario = require ('../models/usuario_model');
+const Joi = require ('@hapi/joi');
 const ruta = express.Router();
+
+const schema = Joi.object({
+    nombre: Joi.string()
+        .min(3)
+        .max(30)
+        .required(),
+
+    password: Joi.string()
+        .pattern(/^[a-zA-Z0-9]{3,30}$/),
+    
+    email: Joi.string()
+        .email({ minDomainSegments: 2, tlds: {allow: ['com', 'net']}})
+})
 
 ruta.get('/', (req, res) => {
     let resultado = ListarUsuariosActivos();
@@ -9,7 +23,7 @@ ruta.get('/', (req, res) => {
     }).catch(err => {
         res.status(400).json(
             {
-            error:err
+            err
             }
         )
     })
@@ -17,31 +31,47 @@ ruta.get('/', (req, res) => {
 
 ruta.post('/', (req, res) => {
     let body = req.body;
-    let resultado = crearUsuario(body);
 
-    resultado.then(user => {
-        res.json({
-            valor: user
-        })
-    }).catch( err => {
+    const {error, value} = schema.validate({nombre: body.nombre, email: body.email});
+    if(!error){
+        let resultado = crearUsuario(body);
+        resultado.then(user => {
+            res.json({
+                valor: user
+            })
+        }).catch( err => {
+            res.status(400).json({
+                err
+            })
+        });
+    }else{
         res.status(400).json({
-            error: err
+            error
         })
-    });
+    }
 });
 
 
 ruta.put('/:email', (req, res) => {
-    let resultado = actualizarUsuario(req.params.email, req.body);
-    resultado.then(valor => {
+
+    const {error, value} = schema.validate({nombre: req.body.nombre});
+
+    if(!error){
+        let resultado = actualizarUsuario(req.params.email, req.body);
+        resultado.then(valor => {
         res.json({
-            valor: valor
+            valor
         })
     }).catch(err => {
         res.status(400).json({
-            error: err
+            err
         })
     });
+    }else{
+        res.status(400).json({
+            error
+        })
+    }
 });
 
 ruta.delete('/:email', (req, res) => {
@@ -52,7 +82,7 @@ ruta.delete('/:email', (req, res) => {
         })
     }).catch(err =>{
         res.status(400).json({
-            error: err
+            err
         })
     });
 });
@@ -72,7 +102,7 @@ async function ListarUsuariosActivos(){
 }
 
 async function actualizarUsuario(email, body){
-    let usuario = await Usuario.findOneAndUpdate(email, {
+    let usuario = await Usuario.findOneAndUpdate({"email": email}, {
         $set: {
             nombre   : body.nombre,
             password : body.password
@@ -83,7 +113,7 @@ async function actualizarUsuario(email, body){
 
 
 async function desactivarUsuario(email){
-    let usuario = await Usuario.findOneAndUpdate(email, {
+    let usuario = await Usuario.findOneAndUpdate({"email": email}, {
         $set: {
             estado: false
         }
