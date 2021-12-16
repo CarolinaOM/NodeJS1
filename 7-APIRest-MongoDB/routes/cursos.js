@@ -20,6 +20,15 @@ ruta.post('/', (req, res)=>{
     })
 })
 
+ruta.delete('/:id', (req, res) => {
+    let resultado = desactivarCurso(req.params.id);
+    resultado.then(curso => {
+        res.json(curso);
+    }).catch(err => {
+        res.status(400).json(err);
+    })
+})
+
 ruta.put('/:id', (req, res) => {
     let resultado = actualizarCurso(req.params.id, req.body);
     resultado.then(curso => {
@@ -42,6 +51,15 @@ async function actualizarCurso(id, body){
         $set: {
             titulo: body.titulo,
             descripcion: body.desc
+        }
+    }, {new: true});
+    return curso;
+}
+
+async function desactivarCurso(id){
+    let curso = await Curso.findByIdAndUpdate(id, {
+        $set: {
+            estado: false
         }
     }, {new: true});
     return curso;
