@@ -2,9 +2,15 @@ const express = require('express');
 const Curso = require ('../models/curso_model');
 const ruta = express.Router();
 
-ruta.get('/', (req, res) => {
-    res.json('Listo el GER de cursos.');
+ruta.get('/',(req, res) => {
+    let resultado = listarCursosActivos();
+    resultado.then(cursos => {
+        res.json(cursos);
+    }).catch(err => {
+        res.status(400).json(err);
+    })
 });
+
 
 ruta.post('/', (req, res)=>{
     let resultado = crearCurso (req.body);
@@ -37,6 +43,12 @@ ruta.put('/:id', (req, res) => {
         res.status(400).json(err)
     })
 })
+
+async function listarCursosActivos(){
+    let cursos = await Curso.find({"estado": true});
+    return cursos;
+}
+
 
 async function crearCurso(body){
     let curso = new Curso ({
