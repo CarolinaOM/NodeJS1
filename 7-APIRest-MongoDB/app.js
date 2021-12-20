@@ -4,9 +4,10 @@ const auth = require('./routes/auth');
 const usuario = require('./routes/usuarios');
 const express = require('express');
 const mongoose = require('mongoose');
+const config = require('config');
 
 //Conectarnos a la BD
-mongoose.connect('mongodb://localhost:27017/demo', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(config.get('configDB.HOST'), {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log('Conectado a MongoDB...'))
     .catch(err => console.log('No se pudo conectar con MongoDB..', err));
 
